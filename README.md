@@ -24,5 +24,12 @@ A free and open source toolkit for OSINT purposes with the aim to scientifically
 * argparse
 * httplib
 
+# Example Screenshot:
+
+![alt Screenshot 1](https://github.com/mattiareggiani/os4tw/blob/master/image/example_1.png)
+![alt Screenshot 2](https://github.com/mattiareggiani/os4tw/blob/master/image/example_2.png)
+![alt Screenshot 3](https://github.com/mattiareggiani/os4tw/blob/master/image/example_3.png)
+![alt Screenshot 4](https://github.com/mattiareggiani/os4tw/blob/master/image/example_4.png)
+
 # License
 GNU, version 3
