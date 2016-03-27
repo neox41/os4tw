@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-os4tw v.0.1 - OSINT and Digital Investigation toolkit for Twitter
+os4tw v.0.1 - OSINT and Digital Investigation tool for Twitter
 
 #########################################################################
 #                                                                     	#
@@ -45,7 +45,7 @@ __version__='v0.1'
 __description__='''\
   ___________________________________________________________
   
-  os4tw - OSINT and Digital Investigation toolkit for Twitter
+  os4tw - OSINT and Digital Investigation tool for Twitter
   Author: Mattia Reggiani (info@mattiareggiani.com)
   Github: https://github.com/mattiareggiani/os4tw
   ___________________________________________________________
@@ -422,21 +422,28 @@ def main():
 	tw = args.username_tw
 	
 	if ts:
+		print __description__
 		cyberSquatting(ts)
 	elif r:
+		print __description__
 		rogue(r)
 	elif fe:
+		print __description__
 		getFollower(fe) 
 	elif fi:
+		print __description__
 		getFollowing(fi) 
 	elif p:
+		print __description__
 		getPlaces(p) 
 	elif f:
 		print __description__
 		showFriendship(f) 
 	elif tw:
+		print __description__
 		getTweets(tw)
 	elif s:
+		print __description__
 		search(s) 
 	else:
 		print "Usage ./os4tw.py [option]"

@@ -1,6 +1,6 @@
-## os4tw - OSINT and Digital Investigation toolkit for Twitter
+## os4tw - OSINT and Digital Investigation tool for Twitter
 
-A free and open source toolkit for OSINT purposes with the aim to scientifically support digital investigations on social network Twitter
+A free and open source tool for OSINT purposes with the aim to scientifically support digital investigations on social network Twitter
 
 # Features
 * Detecting typo squatted and rogue Profile
