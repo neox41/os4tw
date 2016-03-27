@@ -11,7 +11,7 @@ A free and open source tool for OSINT purposes with the aim to scientifically su
 * Check users friendship and connection
 
 # Next Features
-* Generation of forensically-sound report 
+* Reporting forensics-like 
 * Preserve digital evidence of social account
 * Improve the support for social media forensic investigation
 
