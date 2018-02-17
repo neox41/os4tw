@@ -3,27 +3,6 @@
 """
 os4tw v.0.1 - OSINT and Digital Investigation tool for Twitter
 
-#########################################################################
-#                                                                     	#
-# Developed by Mattia Reggiani, info@mattiareggiani.com               	#
-#                                                                     	#
-# This program is free software: you can redistribute it and/or modify	#
-# it under the terms of the GNU General Public License as published by	#
-# the Free Software Foundation, either version 3 of the License, or	#
-# (at your option) any later version.					#
-#									#
-# This program is distributed in the hope that it will be useful,      	#
-# but WITHOUT ANY WARRANTY; without even the implied warranty of       	#
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        	#
-# GNU General Public License for more details.                         	#
-#                                                                      	#
-# You should have received a copy of the GNU General Public License    	#
-# along with this program. If not, see <http://www.gnu.org/licenses/>  	#
-#                                                                      	#
-# Released under the GNU Affero General Public License                 	#
-# (https://www.gnu.org/licenses/agpl-3.0.html)                         	#
-#########################################################################
-
 WARNING: the potential of this program is limited by the API limitations provided by Twitter
 	For further information, please visit https://dev.twitter.com/rest/public/rate-limits
 	
@@ -74,7 +53,7 @@ def getFollower(profile):
     for user in tweepy.Cursor(api.followers, screen_name=profile, count=200).items():
 		try:
 			l.append(user.screen_name)
-			i = i + 1
+			i += 1
 		except:
 			print "[-] Timeout, sleeping for 15 minutes..."
 			time.sleep(15*60)
@@ -92,7 +71,7 @@ def getFollowing(profile):
     for user in tweepy.Cursor(api.friends, screen_name=profile, count=200).items():
 		try:
 			l.append(user.screen_name)
-			i = i + 1
+			i += 1
 		except:
 			print "[-] Timeout, sleeping for 15 minutes..."
 			time.sleep(15*60)
@@ -157,29 +136,38 @@ def cyberSquatting(s): # Function inspired to https://github.com/elceef/dnstwist
     # Addidion
     for i in range(97, 123):
         result.append(s + chr(i))
+        break
 
     for i in range(0, 10):
         result.append(s + str(i))
+        break
 
     result.append(s + chr(95))
 
     for i in range(1, len(s)):
         result.append(s[:i] + '_' + s[i:])
+        break
     # Insertion
     for i in range(1, len(s)):
         for key in range(97, 123):
             result.append(s[:i] + chr(key) + s[i:])
+            break
+	
     for i in range(1, len(s)):
         for key in range(0, 10):
             result.append(s[:i] + str(key) + s[i:])
+            break
     for i in range(1, len(s)):
         result.append(s[:i] + '_' + s[i:])
+        break
     # Omission
     for i in range(0, len(s)):
         result.append(s[:i] + s[i+1:])
+        break
     # Repetition
     for i in range(0, len(s)):
         result.append(s[:i] + s[i] + s[i] + s[i+1:])
+        break
     # Homoglyph
     glyphs = {
         'd': ['b', 'cl', 'dl', 'di'], 'm': ['n', 'nn', 'rn', 'rr'], 'l': ['1', 'i'],
@@ -225,7 +213,7 @@ def cyberSquatting(s): # Function inspired to https://github.com/elceef/dnstwist
 		if len(result[i]) > 15:
 			continue
 		else:
-			if checkUserExist(conn, result[i]):
+			if (s != result[i] and checkUserExist(conn, result[i])):
 				printColour("[+] @" + result[i], GREEN)
 				print (" (https://www.twitter.com/" + result[i] + ")\n")
 				i += 1
@@ -316,7 +304,6 @@ def search(s):
         authorList.append(author)
         if userMentions:
             for m in userMentions:
-                #print "[+] Mentions: " + m.get('screen_name')
                 userMentionsList.append(m.get('screen_name'))
         if hashtag:
             for h in hashtag:
@@ -349,25 +336,25 @@ def search(s):
     for m in counterM.most_common(15):
 		print str(h[0]) + " (" + str(h[1]) + " tweets)"
 
-def rogue(s):
-	printColour("\n[*] ", BLUE)
-	c = 0
-	print "Potential rogue profile:\n"
-	pageList = []
-	tmp = []
-	i=0
-	for page in tweepy.Cursor(api.search_users, q=s, include_entities=False, count=20).pages():
-		if (c>30): # Counter to limit the request
-			break
-		c +=1 
-		for result in page:
-			if result.screen_name not in tmp:
-				i += 1
-				tmp.append(result.screen_name)
-				printColour("[+] " + result.name + " (@" + result.screen_name + ")", GREEN)
-				print "\n"
-	printColour("\n[*] ", CYAN)
-	print "Total potential rogue profile: " + str(i) + "\n"
+def profileSearch(s):
+    printColour("\n[*] ", BLUE)
+    c = 0
+    print "List:\n"
+    pageList = []
+    tmp = []
+    i=0
+    for page in tweepy.Cursor(api.search_users, q=s, include_entities=False, count=20).pages():
+        if (c>30): # Counter to limit the request
+            break
+        c +=1 
+        for result in page:
+            if result.screen_name not in tmp:
+                i += 1
+                tmp.append(result.screen_name)
+                printColour("[+] " + result.name + " (@" + result.screen_name + "): " + result.description, GREEN)
+                print "\n"
+    printColour("\n[*] ", CYAN)
+    print "Total profiles: " + str(i) + "\n"
 
 def has_colours(stream):
     if not (hasattr(stream, "isatty") and stream.isatty()):
@@ -400,51 +387,42 @@ def main():
 		description=__description__)
 	
 	parser.add_argument('-ts', help='Get Social Profile typesquotted', dest="username_ts", metavar="USERNAME", required=False)
-	parser.add_argument('-r', help='Get Social Profile rogue', dest="username_r", metavar="USERNAME", required=False)
 	parser.add_argument('-fe', help='Get User Followers', dest="username_fe", metavar="USERNAME", required=False)
 	parser.add_argument('-fi', help='Get User Following', dest="username_fi", metavar="USERNAME", required=False)
 	parser.add_argument('-p', help='Get places frequented by User', dest="username_p", metavar="USERNAME", required=False)
 	parser.add_argument('-tw', help='Get Users tweets Timeline', dest="username_tw", metavar="USERNAME", required=False)
-	
-	parser.add_argument('-s', help='Search function by Keyword', dest="query", metavar="KEYWORD", required=False)
-	
+	parser.add_argument('-s', help='Tweet Search function', dest="queryTweet", metavar="KEYWORD", required=False)
+	parser.add_argument('-c', help='Profile Search function', dest="queryProfile", metavar="KEYWORD", required=False)
 	parser.add_argument('-f', help='Get Users Friendship', nargs='+', dest="username_f", metavar="USERNAME", required=False)
 	
 	args = parser.parse_args()
 
 	ts = args.username_ts
-	r = args.username_r
 	fe = args.username_fe
 	fi = args.username_fi
-	s = args.query
+	s = args.queryTweet
 	p = args.username_p
 	f = args.username_f
+	c = args.queryProfile
 	tw = args.username_tw
 	
 	if ts:
-		print __description__
 		cyberSquatting(ts)
-	elif r:
-		print __description__
-		rogue(r)
 	elif fe:
-		print __description__
 		getFollower(fe) 
 	elif fi:
-		print __description__
 		getFollowing(fi) 
 	elif p:
-		print __description__
 		getPlaces(p) 
 	elif f:
 		print __description__
 		showFriendship(f) 
 	elif tw:
-		print __description__
 		getTweets(tw)
 	elif s:
-		print __description__
-		search(s) 
+		search(s)
+	elif c:
+		profileSearch(c)
 	else:
 		print "Usage ./os4tw.py [option]"
 		print "Error arguments: missing mandatory option. Use ./os4tw.py -h to help\n"
@@ -452,5 +430,3 @@ def main():
     
 if __name__ == "__main__":
 	main()
-
-
